@@ -123,6 +123,21 @@ func TestRecordRSLEntryForReference(t *testing.T) {
 	assert.NotEqual(t, currentEntryID, entry.GetID())
 	assert.Equal(t, newCommitID, entry.TargetID)
 	assert.Equal(t, "refs/heads/not-main", entry.RefName)
+
+	t.Run("miscellaneous error checking", func(t *testing.T) {
+		tempDir := t.TempDir()
+		repo := gitinterface.CreateTestGitRepository(t, tempDir, false)
+		nr := &Repository{r: repo}
+
+		// Test signCommit
+		err := repo.SetGitConfig("user.signingkey", "")
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		err = nr.RecordRSLEntryForReference(testCtx, "refs/heads/main", true)
+		assert.ErrorIs(t, err, gitinterface.ErrSigningKeyNotSpecified)
+	})
 }
 
 func TestRecordRSLEntryForReferenceAtTarget(t *testing.T) {
@@ -270,6 +285,21 @@ func TestRecordRSLAnnotation(t *testing.T) {
 	assert.Equal(t, "skip annotation", annotation.Message)
 	assert.Equal(t, []gitinterface.Hash{entryID}, annotation.RSLEntryIDs)
 	assert.True(t, annotation.Skip)
+
+	t.Run("miscellaneous error checking", func(t *testing.T) {
+		tempDir := t.TempDir()
+		repo := gitinterface.CreateTestGitRepository(t, tempDir, false)
+		nr := &Repository{r: repo}
+
+		// Test signCommit
+		err := repo.SetGitConfig("user.signingkey", "")
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		err = nr.RecordRSLAnnotation(testCtx, []string{entryID.String()}, true, "skip annotation", true)
+		assert.ErrorIs(t, err, gitinterface.ErrSigningKeyNotSpecified)
+	})
 }
 
 func TestReconcileLocalRSLWithRemote(t *testing.T) {
@@ -609,6 +639,21 @@ func TestReconcileLocalRSLWithRemote(t *testing.T) {
 		// Neither RSL should have changed
 		assert.Equal(t, originalRemoteRSLTip, currentRemoteRSLTip)
 		assert.Equal(t, originalLocalRSLTip, currentLocalRSLTip)
+	})
+
+	t.Run("miscellaneous error checking", func(t *testing.T) {
+		tempDir := t.TempDir()
+		repo := gitinterface.CreateTestGitRepository(t, tempDir, false)
+		nr := &Repository{r: repo}
+
+		// Test signCommit
+		err := repo.SetGitConfig("user.signingkey", "")
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		err = nr.ReconcileLocalRSLWithRemote(testCtx, remoteName, true)
+		assert.ErrorIs(t, err, gitinterface.ErrSigningKeyNotSpecified)
 	})
 }
 
