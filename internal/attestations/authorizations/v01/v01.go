@@ -4,10 +4,6 @@
 package v01
 
 import (
-	"encoding/json"
-
-	"github.com/gittuf/gittuf/internal/attestations/authorizations"
-	"github.com/gittuf/gittuf/internal/attestations/common"
 	sslibdsse "github.com/gittuf/gittuf/internal/third_party/go-securesystemslib/dsse"
 	ita "github.com/in-toto/attestation/go/v1"
 )
@@ -30,17 +26,11 @@ type ReferenceAuthorization struct {
 	TargetTreeID   string `json:"targetTreeID"`
 }
 
-func (r *ReferenceAuthorization) GetRef() string {
-	return r.TargetRef
-}
+func (r *ReferenceAuthorization) GetRef() string { _ = "STUB: not implemented"; return "" }
 
-func (r *ReferenceAuthorization) GetFromID() string {
-	return r.FromRevisionID
-}
+func (r *ReferenceAuthorization) GetFromID() string { _ = "STUB: not implemented"; return "" }
 
-func (r *ReferenceAuthorization) GetTargetID() string {
-	return r.TargetTreeID
-}
+func (r *ReferenceAuthorization) GetTargetID() string { _ = "STUB: not implemented"; return "" }
 
 // NewReferenceAuthorization creates a new reference authorization for the
 // provided information. The authorization is embedded in an in-toto "statement"
@@ -48,59 +38,13 @@ func (r *ReferenceAuthorization) GetTargetID() string {
 // and `targetTreeID` specify the change to `targetRef` that is to be authorized
 // by invoking this function.
 func NewReferenceAuthorization(targetRef, fromRevisionID, targetTreeID string) (*ita.Statement, error) {
-	predicate := &ReferenceAuthorization{
-		TargetRef:      targetRef,
-		FromRevisionID: fromRevisionID,
-		TargetTreeID:   targetTreeID,
-	}
-
-	predicateStruct, err := common.PredicateToPBStruct(predicate)
-	if err != nil {
-		return nil, err
-	}
-
-	return &ita.Statement{
-		Type: ita.StatementTypeUri,
-		Subject: []*ita.ResourceDescriptor{
-			{
-				Digest: map[string]string{digestGitTreeKey: targetTreeID},
-			},
-		},
-		PredicateType: PredicateType,
-		Predicate:     predicateStruct,
-	}, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // Validate checks that the returned envelope contains the expected in-toto
 // attestation and predicate contents.
 func Validate(env *sslibdsse.Envelope, targetRef, fromRevisionID, targetTreeID string) error {
-	payload, err := env.DecodeB64Payload()
-	if err != nil {
-		return err
-	}
-
-	attestation := &ita.Statement{}
-	if err := json.Unmarshal(payload, attestation); err != nil {
-		return err
-	}
-
-	if attestation.Subject[0].Digest[digestGitTreeKey] != targetTreeID {
-		return authorizations.ErrInvalidAuthorization
-	}
-
-	predicate := attestation.Predicate.AsMap()
-
-	if predicate[targetTreeIDKey] != targetTreeID {
-		return authorizations.ErrInvalidAuthorization
-	}
-
-	if predicate[fromRevisionIDKey] != fromRevisionID {
-		return authorizations.ErrInvalidAuthorization
-	}
-
-	if predicate[targetRefKey] != targetRef {
-		return authorizations.ErrInvalidAuthorization
-	}
-
+	_ = "STUB: not implemented"
 	return nil
 }

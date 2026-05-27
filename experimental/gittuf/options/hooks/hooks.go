@@ -5,7 +5,6 @@ package hooks
 
 import (
 	"errors"
-	"fmt"
 )
 
 var ErrRequiredOptionNotSet = errors.New("required option not set")
@@ -19,13 +18,8 @@ type Option func(o *Options)
 // WithPrePush can be used to specify arguments normally passed to Git pre-push
 // hooks.
 func WithPrePush(remoteName, remoteURL string, refSpecs []string) Option {
-	return func(o *Options) {
-		o.PrePush = &PrePushOptions{
-			RemoteName: remoteName,
-			RemoteURL:  remoteURL,
-			RefSpecs:   refSpecs,
-		}
-	}
+	_ = "STUB: not implemented"
+	return *new(Option)
 }
 
 type PrePushOptions struct {
@@ -34,18 +28,4 @@ type PrePushOptions struct {
 	RefSpecs   []string
 }
 
-func (o *PrePushOptions) Validate() error {
-	if o.RemoteName == "" {
-		return fmt.Errorf("%w: 'remoteName'", ErrRequiredOptionNotSet)
-	}
-
-	if o.RemoteURL == "" {
-		return fmt.Errorf("%w: 'remoteURL'", ErrRequiredOptionNotSet)
-	}
-
-	if len(o.RefSpecs) == 0 {
-		return fmt.Errorf("%w: 'refSpecs'", ErrRequiredOptionNotSet)
-	}
-
-	return nil
-}
+func (o *PrePushOptions) Validate() error { _ = "STUB: not implemented"; return nil }

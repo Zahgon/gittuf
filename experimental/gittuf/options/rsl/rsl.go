@@ -13,30 +13,23 @@ type RecordOptions struct {
 type RecordOption func(o *RecordOptions)
 
 func WithOverrideRefName(refNameOverride string) RecordOption {
-	return func(o *RecordOptions) {
-		o.RefNameOverride = refNameOverride
-	}
+	_ = "STUB: not implemented"
+	return *new(RecordOption)
 }
 
 // WithSkipCheckForDuplicateEntry indicates that the RSL entry creation must not
 // check if the latest entry for the reference has the same target ID.
 func WithSkipCheckForDuplicateEntry() RecordOption {
-	return func(o *RecordOptions) {
-		o.SkipCheckForDuplicate = true
-	}
+	_ = "STUB: not implemented"
+	return *new(RecordOption)
 }
 
 func WithRecordRemote(remoteName string) RecordOption {
-	return func(o *RecordOptions) {
-		o.RemoteName = remoteName
-	}
+	_ = "STUB: not implemented"
+	return *new(RecordOption)
 }
 
-func WithRecordLocalOnly() RecordOption {
-	return func(o *RecordOptions) {
-		o.LocalOnly = true
-	}
-}
+func WithRecordLocalOnly() RecordOption { _ = "STUB: not implemented"; return *new(RecordOption) }
 
 type AnnotateOptions struct {
 	RemoteName string
@@ -46,13 +39,8 @@ type AnnotateOptions struct {
 type AnnotateOption func(o *AnnotateOptions)
 
 func WithAnnotateRemote(remoteName string) AnnotateOption {
-	return func(o *AnnotateOptions) {
-		o.RemoteName = remoteName
-	}
+	_ = "STUB: not implemented"
+	return *new(AnnotateOption)
 }
 
-func WithAnnotateLocalOnly() AnnotateOption {
-	return func(o *AnnotateOptions) {
-		o.LocalOnly = true
-	}
-}
+func WithAnnotateLocalOnly() AnnotateOption { _ = "STUB: not implemented"; return *new(AnnotateOption) }

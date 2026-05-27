@@ -10,19 +10,4 @@ type Options struct {
 	WithRSLEntry bool
 }
 
-func (o *Options) AddPersistentFlags(cmd *cobra.Command) {
-	cmd.PersistentFlags().StringVarP(
-		&o.SigningKey,
-		"signing-key",
-		"k",
-		"",
-		"signing key to use to sign attestation",
-	)
-
-	cmd.PersistentFlags().BoolVar(
-		&o.WithRSLEntry,
-		"create-rsl-entry",
-		false,
-		"create RSL entry for attestation change immediately (note: the new entry to the RSL will not be synced with the remote)",
-	)
-}
+func (o *Options) AddPersistentFlags(cmd *cobra.Command) { _ = "STUB: not implemented"; return }

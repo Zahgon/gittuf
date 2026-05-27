@@ -17,8 +17,4 @@ var DefaultOptions = &Options{
 
 type Option func(o *Options)
 
-func WithRekorURL(rekorURL string) Option {
-	return func(o *Options) {
-		o.RekorURL = rekorURL
-	}
-}
+func WithRekorURL(rekorURL string) Option { _ = "STUB: not implemented"; return *new(Option) }

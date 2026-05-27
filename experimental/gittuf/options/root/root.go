@@ -10,14 +10,6 @@ type Options struct {
 
 type Option func(o *Options)
 
-func WithRepositoryLocation(location string) Option {
-	return func(o *Options) {
-		o.RepositoryLocation = location
-	}
-}
+func WithRepositoryLocation(location string) Option { _ = "STUB: not implemented"; return *new(Option) }
 
-func WithRSLEntry() Option {
-	return func(o *Options) {
-		o.CreateRSLEntry = true
-	}
-}
+func WithRSLEntry() Option { _ = "STUB: not implemented"; return *new(Option) }

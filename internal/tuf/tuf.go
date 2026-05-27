@@ -4,7 +4,6 @@
 package tuf
 
 import (
-	"encoding/json"
 	"errors"
 
 	"github.com/gittuf/gittuf/internal/common/set"
@@ -413,80 +412,24 @@ const (
 	HookStagePrePush
 )
 
-func (h *HookStage) IsValid() error {
-	switch *h {
-	case HookStagePreCommit, HookStagePrePush:
-		return nil
-	default:
-		return ErrInvalidHookStage
-	}
-}
+func (h *HookStage) IsValid() error { _ = "STUB: not implemented"; return nil }
 
-func (h *HookStage) String() string {
-	switch *h {
-	case HookStagePreCommit:
-		return HookStagePreCommitString
-	case HookStagePrePush:
-		return HookStagePrePushString
-	default:
-		return ""
-	}
-}
+func (h *HookStage) String() string { _ = "STUB: not implemented"; return "" }
 
 // MarshalText is used to convert the instance of HookStage into text. Needed
 // for proper marshalling into JSON as HookStage is a key in a map.
-func (h HookStage) MarshalText() ([]byte, error) {
-	str := h.String()
-	if str == "" {
-		return nil, ErrInvalidHookStage
-	}
-	return []byte(str), nil
-}
+func (h HookStage) MarshalText() ([]byte, error) { _ = "STUB: not implemented"; return nil, nil }
 
 // UnmarshalText is used to convert the instance of HookStage from text. Needed
 // for proper marshalling into JSON as HookStage is a key in a map.
-func (h *HookStage) UnmarshalText(text []byte) error {
-	switch string(text) {
-	case HookStagePreCommitString:
-		*h = HookStagePreCommit
-	case HookStagePrePushString:
-		*h = HookStagePrePush
-	default:
-		return ErrInvalidHookStage
-	}
-
-	return nil
-}
+func (h *HookStage) UnmarshalText(text []byte) error { _ = "STUB: not implemented"; return nil }
 
 // MarshalJSON is used to serialize the instance of HookStage into JSON.
-func (h HookStage) MarshalJSON() ([]byte, error) {
-	str := h.String()
-	if str == "" {
-		return nil, ErrInvalidHookStage
-	}
-
-	return json.Marshal(str)
-}
+func (h HookStage) MarshalJSON() ([]byte, error) { _ = "STUB: not implemented"; return nil, nil }
 
 // UnmarshalJSON is used to load an instance of HookStage from the JSON
 // representation.
-func (h *HookStage) UnmarshalJSON(jsonBytes []byte) error {
-	var stage string
-	if err := json.Unmarshal(jsonBytes, &stage); err != nil {
-		return err
-	}
-
-	switch stage {
-	case HookStagePreCommitString:
-		*h = HookStagePreCommit
-	case HookStagePrePushString:
-		*h = HookStagePrePush
-	default:
-		return ErrInvalidHookStage
-	}
-
-	return nil
-}
+func (h *HookStage) UnmarshalJSON(jsonBytes []byte) error { _ = "STUB: not implemented"; return nil }
 
 // HookEnvironment encodes the environment that a hook is run in
 type HookEnvironment uint
@@ -495,39 +438,15 @@ const (
 	HookEnvironmentLua HookEnvironment = iota
 )
 
-func (h HookEnvironment) String() string {
-	switch h {
-	case HookEnvironmentLua:
-		return HookEnvironmentLuaString
-	default:
-		return ""
-	}
-}
+func (h HookEnvironment) String() string { _ = "STUB: not implemented"; return "" }
 
 // MarshalJSON is used to serialize the instance of HookEnvironment into JSON.
-func (h *HookEnvironment) MarshalJSON() ([]byte, error) {
-	if h.String() == "" {
-		return nil, ErrInvalidHookEnvironment
-	}
-
-	return json.Marshal(h.String())
-}
+func (h *HookEnvironment) MarshalJSON() ([]byte, error) { _ = "STUB: not implemented"; return nil, nil }
 
 // UnmarshalJSON is used to load an instance of HookEnvironment from the JSON
 // representation.
 func (h *HookEnvironment) UnmarshalJSON(jsonBytes []byte) error {
-	var env string
-	if err := json.Unmarshal(jsonBytes, &env); err != nil {
-		return err
-	}
-
-	switch env {
-	case HookEnvironmentLuaString:
-		*h = HookEnvironmentLua
-	default:
-		return ErrInvalidHookEnvironment
-	}
-
+	_ = "STUB: not implemented"
 	return nil
 }
 

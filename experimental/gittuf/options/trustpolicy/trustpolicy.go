@@ -9,8 +9,4 @@ type Options struct {
 
 type Option func(o *Options)
 
-func WithRSLEntry() Option {
-	return func(o *Options) {
-		o.CreateRSLEntry = true
-	}
-}
+func WithRSLEntry() Option { _ = "STUB: not implemented"; return *new(Option) }

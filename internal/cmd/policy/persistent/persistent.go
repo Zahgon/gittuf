@@ -4,9 +4,6 @@
 package persistent
 
 import (
-	"fmt"
-
-	"github.com/gittuf/gittuf/experimental/gittuf"
 	"github.com/spf13/cobra"
 )
 
@@ -15,19 +12,4 @@ type Options struct {
 	WithRSLEntry bool
 }
 
-func (o *Options) AddPersistentFlags(cmd *cobra.Command) {
-	cmd.PersistentFlags().StringVarP(
-		&o.SigningKey,
-		"signing-key",
-		"k",
-		"",
-		fmt.Sprintf("signing key to use to sign root of trust (path to SSH key, \"%s\" for Sigstore)", gittuf.FulcioPrefix),
-	)
-
-	cmd.PersistentFlags().BoolVar(
-		&o.WithRSLEntry,
-		"create-rsl-entry",
-		false,
-		"create RSL entry for policy change immediately (note: the RSL will not be synced with the remote)",
-	)
-}
+func (o *Options) AddPersistentFlags(cmd *cobra.Command) { _ = "STUB: not implemented"; return }

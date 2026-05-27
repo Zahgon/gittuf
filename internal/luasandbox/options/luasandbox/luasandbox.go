@@ -10,7 +10,6 @@ type EnvironmentOptions struct {
 type EnvironmentOption func(*EnvironmentOptions)
 
 func WithLuaTimeout(timeout int) EnvironmentOption {
-	return func(o *EnvironmentOptions) {
-		o.LuaTimeout = timeout
-	}
+	_ = "STUB: not implemented"
+	return *new(EnvironmentOption)
 }

@@ -5,9 +5,6 @@ package tui
 
 import (
 	"context"
-	"errors"
-	"fmt"
-	"strings"
 
 	"github.com/charmbracelet/bubbles/cursor"
 	"github.com/charmbracelet/bubbles/list"
@@ -15,7 +12,6 @@ import (
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/gittuf/gittuf/experimental/gittuf"
-	"github.com/gittuf/gittuf/internal/tuf"
 	"github.com/secure-systems-lab/go-securesystemslib/dsse"
 )
 
@@ -40,13 +36,21 @@ type item struct {
 
 // Note: virtual methods must be implemented for the item struct
 // Title returns the title of the item.
-func (i item) Title() string { return i.title }
+func (i item) Title() string {
+	_ = "STUB: not implemented"
 
-// Description returns the description of the item.
-func (i item) Description() string { return i.desc }
+	// Description returns the description of the item.
+	return ""
+}
 
-// FilterValue returns the value to filter on.
-func (i item) FilterValue() string { return i.title }
+func (i item) Description() string {
+	_ = "STUB: not implemented"
+
+	// FilterValue returns the value to filter on.
+	return ""
+}
+
+func (i item) FilterValue() string { _ = "STUB: not implemented"; return "" }
 
 type model struct {
 	ctx              context.Context
@@ -92,198 +96,57 @@ type inputField struct {
 
 // newDelegate creates a styled list delegate for use in all list.Model instances.
 func newDelegate() list.DefaultDelegate {
-	d := list.NewDefaultDelegate()
-	d.Styles.SelectedTitle = selectedItemStyle
-	d.Styles.SelectedDesc = selectedItemStyle
-	d.Styles.NormalTitle = itemStyle
-	d.Styles.NormalDesc = itemStyle
-	return d
+	_ = "STUB: not implemented"
+	return *new(list.DefaultDelegate)
 }
 
 // newMenuList creates a configured list.Model with default settings.
 func newMenuList(title string, items []list.Item, delegate list.DefaultDelegate) list.Model {
-	l := list.New(items, delegate, 0, 0)
-	l.Title = title
-	l.Styles.Title = titleStyle
-	l.SetShowStatusBar(false)
-	l.SetFilteringEnabled(false)
-	l.SetShowHelp(false)
-	return l
+	_ = "STUB: not implemented"
+	return *new(list.Model)
 }
 
 // initInputs creates a slice of text inputs from field definitions.
 // The first field is focused; the rest are blurred.
-func initInputs(fields []inputField) []textinput.Model {
-	inputs := make([]textinput.Model, len(fields))
-	for i, f := range fields {
-		t := textinput.New()
-		t.Cursor.Style = cursorStyle
-		t.CharLimit = 64
-		t.Placeholder = f.placeholder
-		t.Prompt = f.prompt
-		if i == 0 {
-			t.Focus()
-			t.PromptStyle = focusedStyle
-			t.TextStyle = focusedStyle
-		} else {
-			t.Blur()
-			t.PromptStyle = blurredStyle
-			t.TextStyle = blurredStyle
-		}
-		inputs[i] = t
-	}
-	return inputs
-}
+func initInputs(fields []inputField) []textinput.Model { _ = "STUB: not implemented"; return nil }
 
 // initialModel returns a lightweight loading model for the Terminal UI.
 // All heavy work (repo I/O, signing key, rules) is deferred to loadRepoCmd.
 func initialModel(ctx context.Context, o *options) model {
-	s := spinner.New()
-	s.Spinner = spinner.Dot
-
-	delegate := newDelegate()
-
-	m := model{
-		ctx:        ctx,
-		screen:     screenLoading,
-		spinner:    s,
-		cursorMode: cursor.CursorBlink,
-		policyName: o.policyName,
-		options:    o,
-
-		choiceList: newMenuList("gittuf TUI", []list.Item{
-			item{title: "Policy", desc: "View and manage gittuf Policy"},
-			item{title: "Trust", desc: "View and manage gittuf Root of Trust"},
-		}, delegate),
-		policyScreenList: newMenuList("gittuf Policy Operations", []list.Item{
-			item{title: "View Rules", desc: "View and manage policy rules"},
-		}, delegate),
-		trustScreenList: newMenuList("gittuf Trust Operations", []list.Item{
-			item{title: "View Global Rules", desc: "View and manage global rules"},
-		}, delegate),
-		ruleList:       newMenuList("Policy Rules", []list.Item{}, delegate),
-		globalRuleList: newMenuList("Global Rules", []list.Item{}, delegate),
-	}
-
-	return m
+	_ = "STUB: not implemented"
+	return *new(model)
 }
 
 // loadRepoCmd performs all heavy TUI initialization asynchronously and sends
 // an initDoneMsg back to the program when complete.
 func loadRepoCmd(ctx context.Context, o *options) tea.Cmd {
-	return func() tea.Msg {
-		repo, err := gittuf.LoadRepository(".")
-		if err != nil {
-			return initDoneMsg{err: err}
-		}
-
-		readOnly := o.readOnly
-		var signer dsse.SignerVerifier
-		var footer string
-
-		if !readOnly {
-			signer, err = gittuf.LoadSigner(repo, o.p.SigningKey)
-			if err != nil {
-				if !errors.Is(err, gittuf.ErrSigningKeyNotSpecified) {
-					return initDoneMsg{err: fmt.Errorf("failed to load signing key from Git config: %w", err)}
-				}
-				readOnly = true
-				footer = "No signing key found in Git config, running in read-only mode."
-			}
-		}
-
-		return initDoneMsg{
-			repo:        repo,
-			signer:      signer,
-			rules:       getCurrRules(ctx, o),
-			globalRules: getGlobalRules(ctx, o),
-			readOnly:    readOnly,
-			footer:      footer,
-		}
-	}
+	_ = "STUB: not implemented"
+	return *new(tea.Cmd)
 }
 
 // Init starts the spinner tick and kicks off async repo loading.
-func (m model) Init() tea.Cmd {
-	return tea.Batch(textinput.Blink, m.spinner.Tick, loadRepoCmd(m.ctx, m.options))
-}
+func (m model) Init() tea.Cmd { _ = "STUB: not implemented"; return *new(tea.Cmd) }
 
 // initRuleInputs initializes the input fields for (policy) rule forms.
-func (m *model) initRuleInputs() {
-	m.inputs = initInputs([]inputField{
-		{"Enter Rule Name Here", "Rule Name:"},
-		{"Enter Rule Pattern Here", " Rule Pattern:"},
-		{"Enter Principal IDs Here (comma-separated)", "Authorized Principals:"},
-		{"Enter Threshold", "Threshold:"},
-	})
-	m.focusIndex = 0
-}
+func (m *model) initRuleInputs() { _ = "STUB: not implemented"; return }
 
 // initRuleInputsPrefilled initializes rule inputs prefilled with an existing rule's values.
-func (m *model) initRuleInputsPrefilled(r rule) {
-	m.initRuleInputs()
-	m.inputs[0].SetValue(r.name)
-	m.inputs[1].SetValue(r.pattern)
-	m.inputs[2].SetValue(r.key)
-	m.inputs[3].SetValue(fmt.Sprintf("%d", r.threshold))
-}
+func (m *model) initRuleInputsPrefilled(r rule) { _ = "STUB: not implemented"; return }
 
 // initGlobalRuleInputs initializes the input fields for global rule forms.
-func (m *model) initGlobalRuleInputs() {
-	m.inputs = initInputs([]inputField{
-		{"Enter Global Rule Name Here", "Rule Name:"},
-		{"Enter Global Rule Type (threshold|block-force-pushes)", "Type:"},
-		{"Enter Namespaces (comma-separated)", "Namespaces:"},
-		{"Enter Threshold (if threshold type)", "Threshold:"},
-	})
-	m.focusIndex = 0
-}
+func (m *model) initGlobalRuleInputs() { _ = "STUB: not implemented"; return }
 
 // initGlobalRuleInputsPrefilled initializes global rule inputs prefilled with an existing global rule's values.
-func (m *model) initGlobalRuleInputsPrefilled(gr globalRule) {
-	m.initGlobalRuleInputs()
-	m.inputs[0].SetValue(gr.ruleName)
-	m.inputs[1].SetValue(gr.ruleType)
-	m.inputs[2].SetValue(strings.Join(gr.rulePatterns, ", "))
-	if gr.ruleType == tuf.GlobalRuleThresholdType {
-		m.inputs[3].SetValue(fmt.Sprintf("%d", gr.threshold))
-	}
-}
+func (m *model) initGlobalRuleInputsPrefilled(gr globalRule) { _ = "STUB: not implemented"; return }
 
 // refreshRules re-fetches rules from the repo and rebuilds the list.
-func (m *model) refreshRules() {
-	m.rules = getCurrRules(m.ctx, m.options)
-	m.updateRuleList()
-}
+func (m *model) refreshRules() { _ = "STUB: not implemented"; return }
 
 // refreshGlobalRules re-fetches global rules from the repo and rebuilds the list.
-func (m *model) refreshGlobalRules() {
-	m.globalRules = getGlobalRules(m.ctx, m.options)
-	m.updateGlobalRuleList()
-}
+func (m *model) refreshGlobalRules() { _ = "STUB: not implemented"; return }
 
 // updateRuleList updates the rule list within the TUI.
-func (m *model) updateRuleList() {
-	items := make([]list.Item, len(m.rules))
-	for i, rule := range m.rules {
-		items[i] = item{title: rule.name, desc: fmt.Sprintf("Pattern: %s, Key: %s, Threshold: %d", rule.pattern, rule.key, rule.threshold)}
-	}
-	m.ruleList.SetItems(items)
-}
+func (m *model) updateRuleList() { _ = "STUB: not implemented"; return }
 
 // updateGlobalRuleList updates the global rule list within the TUI.
-func (m *model) updateGlobalRuleList() {
-	items := make([]list.Item, len(m.globalRules))
-	for i, gr := range m.globalRules {
-		desc := fmt.Sprintf(
-			"Type: %s\nNamespaces: %s",
-			gr.ruleType,
-			strings.Join(gr.rulePatterns, ", "),
-		)
-		if gr.ruleType == tuf.GlobalRuleThresholdType {
-			desc += fmt.Sprintf("\nThreshold: %d", gr.threshold)
-		}
-		items[i] = item{title: gr.ruleName, desc: desc}
-	}
-	m.globalRuleList.SetItems(items)
-}
+func (m *model) updateGlobalRuleList() { _ = "STUB: not implemented"; return }

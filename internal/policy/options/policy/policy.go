@@ -13,13 +13,8 @@ type LoadStateOptions struct {
 type LoadStateOption func(*LoadStateOptions)
 
 func WithInitialRootPrincipals(initialRootPrincipals []tuf.Principal) LoadStateOption {
-	return func(o *LoadStateOptions) {
-		o.InitialRootPrincipals = initialRootPrincipals
-	}
+	_ = "STUB: not implemented"
+	return *new(LoadStateOption)
 }
 
-func BypassRSL() LoadStateOption {
-	return func(o *LoadStateOptions) {
-		o.BypassRSL = true
-	}
-}
+func BypassRSL() LoadStateOption { _ = "STUB: not implemented"; return *new(LoadStateOption) }

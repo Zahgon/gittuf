@@ -4,8 +4,6 @@
 package verifymergeable
 
 import (
-	"github.com/gittuf/gittuf/experimental/gittuf"
-	"github.com/gittuf/gittuf/experimental/gittuf/options/verifymergeable"
 	"github.com/spf13/cobra"
 )
 
@@ -15,57 +13,12 @@ type options struct {
 	bypassRSL     bool
 }
 
-func (o *options) AddFlags(cmd *cobra.Command) {
-	cmd.Flags().StringVar(
-		&o.baseBranch,
-		"base-branch",
-		"",
-		"base branch for proposed merge",
-	)
-	cmd.MarkFlagRequired("base-branch") //nolint:errcheck
+func (o *options) AddFlags(cmd *cobra.Command) { _ = "STUB: not implemented"; return }
 
-	cmd.Flags().StringVar(
-		&o.featureBranch,
-		"feature-branch",
-		"",
-		"feature branch for proposed merge",
-	)
-	cmd.MarkFlagRequired("feature-branch") //nolint:errcheck
+//nolint:errcheck
 
-	cmd.Flags().BoolVar(
-		&o.bypassRSL,
-		"bypass-RSL",
-		false,
-		"bypass RSL when identifying current state of feature ref",
-	)
-}
+//nolint:errcheck
 
-func (o *options) Run(cmd *cobra.Command, _ []string) error {
-	repo, err := gittuf.LoadRepository(".")
-	if err != nil {
-		return err
-	}
+func (o *options) Run(cmd *cobra.Command, _ []string) error { _ = "STUB: not implemented"; return nil }
 
-	opts := []verifymergeable.Option{}
-	if o.bypassRSL {
-		opts = append(opts, verifymergeable.WithBypassRSLForFeatureRef())
-	}
-
-	_, err = repo.VerifyMergeable(cmd.Context(), o.baseBranch, o.featureBranch, opts...)
-	return err
-}
-
-func New() *cobra.Command {
-	o := &options{}
-	cmd := &cobra.Command{
-		Use:               "verify-mergeable",
-		Short:             "Tools for verifying mergeability using gittuf policies",
-		Long:              "The 'verify-mergeable' command evaluates whether a feature branch can be merged into a base branch under the repository's gittuf policies. It is used to check policy compliance for a proposed merge by comparing the specified base and feature branches, optionally bypassing the RSL when determining the current state.",
-		Args:              cobra.ExactArgs(0),
-		RunE:              o.Run,
-		DisableAutoGenTag: true,
-	}
-	o.AddFlags(cmd)
-
-	return cmd
-}
+func New() *cobra.Command { _ = "STUB: not implemented"; return nil }

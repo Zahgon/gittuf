@@ -1,9 +1,6 @@
 package dsse
 
 import (
-	"encoding/base64"
-	"fmt"
-
 	"google.golang.org/protobuf/types/known/structpb"
 )
 
@@ -23,17 +20,19 @@ payload field. A flexible decoder is used, first trying standard base64, then
 URL-encoded base64.
 */
 func (e *Envelope) DecodeB64Payload() ([]byte, error) {
-	return b64Decode(e.Payload)
+	_ = "STUB: not implemented"
+	return nil,
+
+		/*
+		   Signature represents a generic in-toto signature that contains the identifier
+		   of the key which was used to create the signature.
+		   The used signature scheme has to be agreed upon by the signer and verifer
+		   out of band.
+		   The signature is a base64 encoding of the raw bytes from the signature
+		   algorithm.
+		*/nil
 }
 
-/*
-Signature represents a generic in-toto signature that contains the identifier
-of the key which was used to create the signature.
-The used signature scheme has to be agreed upon by the signer and verifer
-out of band.
-The signature is a base64 encoding of the raw bytes from the signature
-algorithm.
-*/
 type Signature struct {
 	KeyID     string     `json:"keyid"`
 	Sig       string     `json:"sig"`
@@ -49,24 +48,10 @@ type Extension struct {
 PAE implementes the DSSE Pre-Authentic Encoding
 https://github.com/secure-systems-lab/dsse/blob/master/protocol.md#signature-definition
 */
-func PAE(payloadType string, payload []byte) []byte {
-	return []byte(fmt.Sprintf("DSSEv1 %d %s %d %s",
-		len(payloadType), payloadType,
-		len(payload), payload))
-}
+func PAE(payloadType string, payload []byte) []byte { _ = "STUB: not implemented"; return nil }
 
 /*
 Both standard and url encoding are allowed:
 https://github.com/secure-systems-lab/dsse/blob/master/envelope.md
 */
-func b64Decode(s string) ([]byte, error) {
-	b, err := base64.StdEncoding.DecodeString(s)
-	if err != nil {
-		b, err = base64.URLEncoding.DecodeString(s)
-		if err != nil {
-			return nil, fmt.Errorf("unable to base64 decode payload (is payload in the right format?)")
-		}
-	}
-
-	return b, nil
-}
+func b64Decode(s string) ([]byte, error) { _ = "STUB: not implemented"; return nil, nil }

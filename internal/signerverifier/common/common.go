@@ -6,11 +6,6 @@ package common //nolint:revive
 import (
 	"crypto/x509"
 	"errors"
-	"fmt"
-	"log/slog"
-	"os"
-
-	"github.com/sigstore/sigstore/pkg/cryptoutils"
 )
 
 var (
@@ -25,20 +20,6 @@ var (
 // https://github.com/sigstore/sigstore and is used in gittuf's sigstore signing
 // and verification flows.
 func LoadCertsFromPath(path string) ([]*x509.Certificate, error) {
-	slog.Debug(fmt.Sprintf("Loading %s...", path))
-	pemBytes, err := os.ReadFile(path)
-	if err != nil {
-		return nil, err
-	}
-
-	certs, err := cryptoutils.UnmarshalCertificatesFromPEM(pemBytes)
-	if err != nil {
-		return nil, err
-	}
-
-	if len(certs) == 0 {
-		return nil, fmt.Errorf("no certificates in file %s", path)
-	}
-
-	return certs, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }

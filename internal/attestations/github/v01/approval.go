@@ -5,8 +5,6 @@ package v01
 
 import (
 	authorizationsv01 "github.com/gittuf/gittuf/internal/attestations/authorizations/v01"
-	"github.com/gittuf/gittuf/internal/attestations/common"
-	"github.com/gittuf/gittuf/internal/attestations/github"
 	"github.com/gittuf/gittuf/internal/common/set"
 	sslibdsse "github.com/gittuf/gittuf/internal/third_party/go-securesystemslib/dsse"
 	ita "github.com/in-toto/attestation/go/v1"
@@ -30,11 +28,13 @@ type PullRequestApprovalAttestation struct {
 }
 
 func (pra *PullRequestApprovalAttestation) GetApprovers() []string {
-	return pra.Approvers.Contents()
+	_ = "STUB: not implemented"
+	return nil
 }
 
 func (pra *PullRequestApprovalAttestation) GetDismissedApprovers() []string {
-	return pra.DismissedApprovers.Contents()
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // NewPullRequestApprovalAttestation creates a new GitHub pull request approval
@@ -43,37 +43,11 @@ func (pra *PullRequestApprovalAttestation) GetDismissedApprovers() []string {
 // The `fromTargetID` and `toTargetID` specify the change to `targetRef` that is
 // approved on the corresponding GitHub pull request.
 func NewPullRequestApprovalAttestation(targetRef, fromRevisionID, targetTreeID string, approvers, dismissedApprovers []string) (*ita.Statement, error) {
-	if len(approvers) == 0 && len(dismissedApprovers) == 0 {
-		return nil, github.ErrInvalidPullRequestApprovalAttestation
-	}
-
-	predicate := &PullRequestApprovalAttestation{
-		ReferenceAuthorization: &authorizationsv01.ReferenceAuthorization{
-			TargetRef:      targetRef,
-			FromRevisionID: fromRevisionID,
-			TargetTreeID:   targetTreeID,
-		},
-		Approvers:          set.NewSetFromItems(approvers...),
-		DismissedApprovers: set.NewSetFromItems(dismissedApprovers...),
-	}
-
-	predicateStruct, err := common.PredicateToPBStruct(predicate)
-	if err != nil {
-		return nil, err
-	}
-
-	return &ita.Statement{
-		Type: ita.StatementTypeUri,
-		Subject: []*ita.ResourceDescriptor{
-			{
-				Digest: map[string]string{digestGitTreeKey: targetTreeID},
-			},
-		},
-		PredicateType: PullRequestApprovalPredicateType,
-		Predicate:     predicateStruct,
-	}, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 func ValidatePullRequestApproval(env *sslibdsse.Envelope, targetRef, fromRevisionID, targetTreeID string) error {
-	return authorizationsv01.Validate(env, targetRef, fromRevisionID, targetTreeID)
+	_ = "STUB: not implemented"
+	return nil
 }

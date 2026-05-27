@@ -4,54 +4,13 @@
 package inspectroot
 
 import (
-	"encoding/json"
-	"fmt"
-
-	"github.com/gittuf/gittuf/experimental/gittuf"
-	"github.com/gittuf/gittuf/internal/policy"
-	policyopts "github.com/gittuf/gittuf/internal/policy/options/policy"
 	"github.com/spf13/cobra"
 )
 
 type options struct{}
 
-func (o *options) AddFlags(_ *cobra.Command) {}
+func (o *options) AddFlags(_ *cobra.Command) { _ = "STUB: not implemented"; return }
 
-func (o *options) Run(cmd *cobra.Command, _ []string) error {
-	repo, err := gittuf.LoadRepository(".")
-	if err != nil {
-		return err
-	}
+func (o *options) Run(cmd *cobra.Command, _ []string) error { _ = "STUB: not implemented"; return nil }
 
-	state, err := policy.LoadCurrentState(cmd.Context(), repo.GetGitRepository(), policy.PolicyStagingRef, policyopts.BypassRSL())
-	if err != nil {
-		return err
-	}
-
-	rootMetadata, err := state.GetRootMetadata(false)
-	if err != nil {
-		return err
-	}
-
-	prettyJSON, err := json.MarshalIndent(rootMetadata, "", "  ")
-	if err != nil {
-		return err
-	}
-
-	fmt.Println(string(prettyJSON))
-	return nil
-}
-
-func New() *cobra.Command {
-	o := &options{}
-	cmd := &cobra.Command{
-		Use:               "inspect-root",
-		Short:             "Inspect root metadata",
-		Long:              "This command displays the root metadata in a human-readable format.",
-		RunE:              o.Run,
-		DisableAutoGenTag: true,
-	}
-	o.AddFlags(cmd)
-
-	return cmd
-}
+func New() *cobra.Command { _ = "STUB: not implemented"; return nil }

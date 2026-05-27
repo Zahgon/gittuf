@@ -4,10 +4,6 @@
 package listhooks
 
 import (
-	"fmt"
-	"strings"
-
-	"github.com/gittuf/gittuf/experimental/gittuf"
 	"github.com/spf13/cobra"
 )
 
@@ -17,63 +13,8 @@ type options struct {
 	targetRef string
 }
 
-func (o *options) AddFlags(cmd *cobra.Command) {
-	cmd.Flags().StringVar(
-		&o.targetRef,
-		"target-ref",
-		"policy",
-		"specify which policy ref should be inspected",
-	)
-}
+func (o *options) AddFlags(cmd *cobra.Command) { _ = "STUB: not implemented"; return }
 
-func (o *options) Run(cmd *cobra.Command, _ []string) error {
-	repo, err := gittuf.LoadRepository(".")
-	if err != nil {
-		return err
-	}
+func (o *options) Run(cmd *cobra.Command, _ []string) error { _ = "STUB: not implemented"; return nil }
 
-	hookStages, err := repo.ListHooks(cmd.Context(), o.targetRef)
-	if err != nil {
-		return err
-	}
-
-	for stage, data := range hookStages {
-		fmt.Printf("Stage %s:\n", stage.String())
-		for _, hook := range data {
-			fmt.Printf(indentString+"Hook '%s':\n", hook.ID())
-
-			fmt.Printf("%sPrincipal IDs:\n", strings.Repeat(indentString, 2))
-			for _, id := range hook.GetPrincipalIDs().Contents() {
-				fmt.Printf("%s%s\n", strings.Repeat(indentString, 3), id)
-			}
-
-			fmt.Printf("%sHashes:\n", strings.Repeat(indentString, 2))
-			for algo, hash := range hook.GetHashes() {
-				fmt.Printf("%s%s: %s\n", strings.Repeat(indentString, 3), algo, hash)
-			}
-
-			fmt.Printf("%sEnvironment:\n", strings.Repeat(indentString, 2))
-			fmt.Printf("%s%s\n", strings.Repeat(indentString, 3), hook.GetEnvironment().String())
-
-			fmt.Printf("%sTimeout:\n", strings.Repeat(indentString, 2))
-			fmt.Printf("%s%d\n", strings.Repeat(indentString, 3), hook.GetTimeout())
-		}
-		fmt.Println()
-	}
-
-	return nil
-}
-
-func New() *cobra.Command {
-	o := &options{}
-	cmd := &cobra.Command{
-		Use:               "list-hooks",
-		Short:             "List gittuf hooks for the current policy state",
-		Long:              "The 'list-hooks' command displays the configured gittuf hooks for the current policy state. It is used to inspect existing hooks and view their configuration.",
-		RunE:              o.Run,
-		DisableAutoGenTag: true,
-	}
-	o.AddFlags(cmd)
-
-	return cmd
-}
+func New() *cobra.Command { _ = "STUB: not implemented"; return nil }

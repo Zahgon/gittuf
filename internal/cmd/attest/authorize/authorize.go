@@ -4,10 +4,6 @@
 package authorize
 
 import (
-	"fmt"
-
-	"github.com/gittuf/gittuf/experimental/gittuf"
-	attestopts "github.com/gittuf/gittuf/experimental/gittuf/options/attest"
 	"github.com/gittuf/gittuf/internal/cmd/attest/persistent"
 	"github.com/spf13/cobra"
 )
@@ -18,63 +14,13 @@ type options struct {
 	revoke  bool
 }
 
-func (o *options) AddFlags(cmd *cobra.Command) {
-	cmd.Flags().StringVarP(
-		&o.fromRef,
-		"from-ref",
-		"f",
-		"",
-		"ref to authorize merging changes from",
-	)
-	cmd.MarkFlagRequired("from-ref") //nolint:errcheck
+func (o *options) AddFlags(cmd *cobra.Command) { _ = "STUB: not implemented"; return }
 
-	cmd.Flags().BoolVarP(
-		&o.revoke,
-		"revoke",
-		"r",
-		false,
-		"revoke existing authorization",
-	)
-}
+//nolint:errcheck
 
 func (o *options) Run(cmd *cobra.Command, args []string) error {
-	repo, err := gittuf.LoadRepository(".")
-	if err != nil {
-		return err
-	}
-
-	signer, err := gittuf.LoadSigner(repo, o.p.SigningKey)
-	if err != nil {
-		return err
-	}
-
-	if o.revoke {
-		if len(args) < 3 {
-			return fmt.Errorf("insufficient parameters for revoking authorization, requires <targetRef> <fromID> <targetTreeID>")
-		}
-
-		return repo.RemoveReferenceAuthorization(cmd.Context(), signer, args[0], args[1], args[2], true)
-	}
-
-	opts := []attestopts.Option{}
-	if o.p.WithRSLEntry {
-		opts = append(opts, attestopts.WithRSLEntry())
-	}
-
-	return repo.AddReferenceAuthorization(cmd.Context(), signer, args[0], o.fromRef, true, opts...)
+	_ = "STUB: not implemented"
+	return nil
 }
 
-func New(persistent *persistent.Options) *cobra.Command {
-	o := &options{p: persistent}
-	cmd := &cobra.Command{
-		Use:               "authorize",
-		Short:             "Add or revoke reference authorization",
-		Long:              `Authorize or revoke permission to merge changes from one ref to another. Use '--from-ref' to specify the source reference.`,
-		Args:              cobra.MinimumNArgs(1),
-		RunE:              o.Run,
-		DisableAutoGenTag: true,
-	}
-	o.AddFlags(cmd)
-
-	return cmd
-}
+func New(persistent *persistent.Options) *cobra.Command { _ = "STUB: not implemented"; return nil }

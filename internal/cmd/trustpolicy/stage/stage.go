@@ -4,7 +4,6 @@
 package stage
 
 import (
-	"github.com/gittuf/gittuf/experimental/gittuf"
 	"github.com/spf13/cobra"
 )
 
@@ -12,38 +11,11 @@ type options struct {
 	localOnly bool
 }
 
-func (o *options) AddFlags(cmd *cobra.Command) {
-	cmd.Flags().BoolVar(
-		&o.localOnly,
-		"local-only",
-		false,
-		"indicate that the policy must be committed into the RSL locally",
-	)
-}
+func (o *options) AddFlags(cmd *cobra.Command) { _ = "STUB: not implemented"; return }
 
 func (o *options) Run(cmd *cobra.Command, args []string) error {
-	repo, err := gittuf.LoadRepository(".")
-	if err != nil {
-		return err
-	}
-
-	remoteName := ""
-	if len(args) > 0 {
-		remoteName = args[0]
-	}
-
-	return repo.StagePolicy(cmd.Context(), remoteName, o.localOnly, true)
+	_ = "STUB: not implemented"
+	return nil
 }
 
-func New() *cobra.Command {
-	o := &options{}
-	cmd := &cobra.Command{
-		Use:   "stage",
-		Short: "Stage and push local policy-staging changes to remote repository",
-		Long:  "The 'stage' command stages local policy changes from the policy-staging reference and optionally pushes them to a remote repository. It is used to prepare policy updates so they can be reviewed and signed by other users if needed. Changes can optionally be committed the to the RSL locally.",
-		RunE:  o.Run,
-	}
-	o.AddFlags(cmd)
-
-	return cmd
-}
+func New() *cobra.Command { _ = "STUB: not implemented"; return nil }

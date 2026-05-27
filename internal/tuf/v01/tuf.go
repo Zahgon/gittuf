@@ -22,24 +22,21 @@ var ErrTargetsNotEmpty = errors.New("`targets` field in gittuf Targets metadata 
 type Key signerverifier.SSLibKey
 
 // NewKeyFromSSLibKey converts the signerverifier.SSLibKey into a Key object.
-func NewKeyFromSSLibKey(key *signerverifier.SSLibKey) *Key {
-	k := Key(*key)
-	return &k
-}
+func NewKeyFromSSLibKey(key *signerverifier.SSLibKey) *Key { _ = "STUB: not implemented"; return nil }
 
 // ID implements the key's identifier. It implements the Principal interface.
 func (k *Key) ID() string {
-	return k.KeyID
+	_ = "STUB: not implemented"
+
+	// Keys returns the set of keys (using the signerverifier.SSLibKey definition)
+	// associated with the principal.
+	return ""
 }
 
-// Keys returns the set of keys (using the signerverifier.SSLibKey definition)
-// associated with the principal.
-func (k *Key) Keys() []*signerverifier.SSLibKey {
-	key := signerverifier.SSLibKey(*k)
-	return []*signerverifier.SSLibKey{&key}
-}
+func (k *Key) Keys() []*signerverifier.SSLibKey { _ = "STUB: not implemented"; return nil }
 
 func (k *Key) CustomMetadata() map[string]string {
+	_ = "STUB: not implemented"
 	// Key does not support custom metadata
 	return nil
 }

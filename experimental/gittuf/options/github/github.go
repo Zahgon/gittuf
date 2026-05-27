@@ -5,7 +5,6 @@ package github
 
 import (
 	"context"
-	"os"
 )
 
 const (
@@ -37,35 +36,23 @@ type Option func(o *Options)
 // WithGitHubTokenSource can be used to specify an authentication token source
 // to fetch a token to use the GitHub API.
 func WithGitHubTokenSource(tokenSource TokenSource) Option {
-	return func(o *Options) {
-		o.GitHubTokenSource = tokenSource
-	}
+	_ = "STUB: not implemented"
+	return *new(Option)
 }
 
 // WithGitHubBaseURL can be used to specify a custom GitHub instance, such as an
 // on-premises GitHub Enterprise Server.
-func WithGitHubBaseURL(baseURL string) Option {
-	return func(o *Options) {
-		o.GitHubBaseURL = baseURL
-	}
-}
+func WithGitHubBaseURL(baseURL string) Option { _ = "STUB: not implemented"; return *new(Option) }
 
-func WithRSLEntry() Option {
-	return func(o *Options) {
-		o.CreateRSLEntry = true
-	}
-}
+func WithRSLEntry() Option { _ = "STUB: not implemented"; return *new(Option) }
 
-func WithUseGitHubAPI() Option {
-	return func(o *Options) {
-		o.UseGitHubAPI = true
-	}
-}
+func WithUseGitHubAPI() Option { _ = "STUB: not implemented"; return *new(Option) }
 
 // TokenSourceEnvironment reads the GitHub API token from the GITHUB_TOKEN
 // environment variable. It implements the TokenSource interface.
 type TokenSourceEnvironment struct{}
 
 func (t *TokenSourceEnvironment) Token(_ context.Context) (string, error) {
-	return os.Getenv(githubTokenEnvKey), nil
+	_ = "STUB: not implemented"
+	return "", nil
 }

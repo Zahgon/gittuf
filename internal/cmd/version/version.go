@@ -4,41 +4,13 @@
 package version //nolint:revive
 
 import (
-	"fmt"
-
-	"github.com/gittuf/gittuf/internal/dev"
-	"github.com/gittuf/gittuf/internal/version"
 	"github.com/spf13/cobra"
 )
 
 type options struct{}
 
-func (o *options) AddFlags(_ *cobra.Command) {}
+func (o *options) AddFlags(_ *cobra.Command) { _ = "STUB: not implemented"; return }
 
-func (o *options) Run(_ *cobra.Command, _ []string) error {
-	v := version.GetVersion()
-	if v[0] == 'v' {
-		v = v[1:]
-	}
-	fmt.Printf("gittuf version %s\n", v)
+func (o *options) Run(_ *cobra.Command, _ []string) error { _ = "STUB: not implemented"; return nil }
 
-	if dev.InDevMode() {
-		fmt.Printf("gittuf is operating in developer mode. Override by setting %s=0.\n", dev.DevModeKey)
-	}
-
-	return nil
-}
-
-func New() *cobra.Command {
-	o := &options{}
-	cmd := &cobra.Command{
-		Use:               "version",
-		Short:             "Version of gittuf",
-		Long:              "The 'version' command displays the current version of gittuf.",
-		RunE:              o.Run,
-		DisableAutoGenTag: true,
-	}
-	o.AddFlags(cmd)
-
-	return cmd
-}
+func New() *cobra.Command { _ = "STUB: not implemented"; return nil }

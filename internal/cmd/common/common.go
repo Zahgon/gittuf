@@ -5,7 +5,6 @@ package common //nolint:revive
 
 import (
 	"errors"
-	"strings"
 )
 
 var ErrSigningKeyNotSet = errors.New("required flag \"signing-key\" not set")
@@ -14,17 +13,10 @@ var ErrSigningKeyNotSet = errors.New("required flag \"signing-key\" not set")
 type PublicKeys []string
 
 // String implements part of the pflag.Value interface.
-func (p *PublicKeys) String() string {
-	return strings.Join(*p, ", ")
-}
+func (p *PublicKeys) String() string { _ = "STUB: not implemented"; return "" }
 
 // Set implements part of the pflag.Value interface.
-func (p *PublicKeys) Set(value string) error {
-	*p = append(*p, value)
-	return nil
-}
+func (p *PublicKeys) Set(value string) error { _ = "STUB: not implemented"; return nil }
 
 // Type implements part of the pflag.Value interface.
-func (p *PublicKeys) Type() string {
-	return "public-keys"
-}
+func (p *PublicKeys) Type() string { _ = "STUB: not implemented"; return "" }

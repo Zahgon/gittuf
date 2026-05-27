@@ -4,11 +4,7 @@
 package attestations
 
 import (
-	"encoding/json"
 	"errors"
-	"fmt"
-	"path"
-	"strings"
 
 	"github.com/gittuf/gittuf/internal/rsl"
 	"github.com/gittuf/gittuf/pkg/gitinterface"
@@ -75,138 +71,32 @@ type Attestations struct {
 // LoadCurrentAttestations inspects the repository's attestations namespace and
 // loads the current attestations.
 func LoadCurrentAttestations(repo *gitinterface.Repository) (*Attestations, error) {
-	entry, _, err := rsl.GetLatestReferenceUpdaterEntry(repo, rsl.ForReference(Ref))
-	if err != nil {
-		if !errors.Is(err, rsl.ErrRSLEntryNotFound) {
-			return nil, err
-		}
-
-		return &Attestations{}, nil
-	}
-
-	return LoadAttestationsForEntry(repo, entry)
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // LoadAttestationsForEntry loads the repository's attestations for a particular
 // RSL entry for the attestations namespace.
 func LoadAttestationsForEntry(repo *gitinterface.Repository, entry rsl.ReferenceUpdaterEntry) (*Attestations, error) {
-	if entry.GetRefName() != Ref {
-		return nil, rsl.ErrRSLEntryDoesNotMatchRef
-	}
-
-	attestationsRootTreeID, err := repo.GetCommitTreeID(entry.GetTargetID())
-	if err != nil {
-		return nil, err
-	}
-
-	treeContents, err := repo.GetAllFilesInTree(attestationsRootTreeID)
-	if err != nil {
-		return nil, err
-	}
-
-	if len(treeContents) == 0 {
-		// This happens in the initial commit for the attestations namespace,
-		// where there are no entries in the tree yet.
-		// This is expected, and there is nothing more to check so return a zero Attestations state.
-		return &Attestations{}, nil
-	}
-
-	attestations := &Attestations{
-		referenceAuthorizations:        map[string]gitinterface.Hash{},
-		githubPullRequestAttestations:  map[string]gitinterface.Hash{},
-		codeReviewApprovalAttestations: map[string]gitinterface.Hash{},
-		codeReviewApprovalIndex:        map[string]string{},
-	}
-
-	for name, blobID := range treeContents {
-		switch {
-		case strings.HasPrefix(name, referenceAuthorizationsTreeEntryName+"/"):
-			attestations.referenceAuthorizations[strings.TrimPrefix(name, referenceAuthorizationsTreeEntryName+"/")] = blobID
-		case strings.HasPrefix(name, githubPullRequestAttestationsTreeEntryName+"/"):
-			attestations.githubPullRequestAttestations[strings.TrimPrefix(name, githubPullRequestAttestationsTreeEntryName+"/")] = blobID
-		case strings.HasPrefix(name, codeReviewApprovalAttestationsTreeEntryName+"/"):
-			attestations.codeReviewApprovalAttestations[strings.TrimPrefix(name, codeReviewApprovalAttestationsTreeEntryName+"/")] = blobID
-		}
-	}
-
-	if blobID, has := attestations.codeReviewApprovalAttestations[codeReviewApprovalIndexTreeEntryName]; has {
-		// Load the approval index that maps review IDs to the gittuf way of
-		// mapping the review to a change in the repository
-
-		indexContents, err := repo.ReadBlob(blobID)
-		if err != nil {
-			return nil, err
-		}
-
-		if err := json.Unmarshal(indexContents, &attestations.codeReviewApprovalIndex); err != nil {
-			return nil, fmt.Errorf("unable to read current code review approval index: %w", err)
-		}
-	}
-
-	return attestations, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
+
+// This happens in the initial commit for the attestations namespace,
+// where there are no entries in the tree yet.
+// This is expected, and there is nothing more to check so return a zero Attestations state.
+
+// Load the approval index that maps review IDs to the gittuf way of
+// mapping the review to a change in the repository
 
 // Commit writes the state of the attestations to the repository, creating a new
 // commit with the changes made. An RSL entry is also recorded for the
 // namespace.
 func (a *Attestations) Commit(repo *gitinterface.Repository, commitMessage string, createRSLEntry, signCommit bool) error {
-	if len(commitMessage) == 0 {
-		commitMessage = defaultCommitMessage
-	}
-
-	if len(a.codeReviewApprovalIndex) != 0 {
-		// Create a JSON blob for the approval index
-		indexContents, err := json.Marshal(&a.codeReviewApprovalIndex)
-		if err != nil {
-			return err
-		}
-		indexBlobID, err := repo.WriteBlob(indexContents)
-		if err != nil {
-			return err
-		}
-		a.codeReviewApprovalAttestations[codeReviewApprovalIndexTreeEntryName] = indexBlobID
-	}
-
-	treeBuilder := gitinterface.NewTreeBuilder(repo)
-
-	allAttestations := []gitinterface.TreeEntry{}
-	for name, blobID := range a.referenceAuthorizations {
-		allAttestations = append(allAttestations, gitinterface.NewEntryBlob(path.Join(referenceAuthorizationsTreeEntryName, name), blobID))
-	}
-	for name, blobID := range a.githubPullRequestAttestations {
-		allAttestations = append(allAttestations, gitinterface.NewEntryBlob(path.Join(githubPullRequestAttestationsTreeEntryName, name), blobID))
-	}
-	for name, blobID := range a.codeReviewApprovalAttestations {
-		allAttestations = append(allAttestations, gitinterface.NewEntryBlob(path.Join(codeReviewApprovalAttestationsTreeEntryName, name), blobID))
-	}
-
-	attestationsTreeID, err := treeBuilder.WriteTreeFromEntries(allAttestations)
-	if err != nil {
-		return err
-	}
-
-	priorCommitID, err := repo.GetReference(Ref)
-	if err != nil {
-		if !errors.Is(err, gitinterface.ErrReferenceNotFound) {
-			return err
-		}
-	}
-
-	newCommitID, err := repo.Commit(attestationsTreeID, Ref, commitMessage, signCommit)
-	if err != nil {
-		return err
-	}
-
-	if createRSLEntry {
-		// We must reset to original attestation commit if err != nil from here onwards.
-		if err := rsl.NewReferenceEntry(Ref, newCommitID).Commit(repo, signCommit); err != nil {
-			if !priorCommitID.IsZero() {
-				return repo.ResetDueToError(err, Ref, priorCommitID)
-			}
-
-			return err
-		}
-	}
-
+	_ = "STUB: not implemented"
 	return nil
 }
+
+// Create a JSON blob for the approval index
+
+// We must reset to original attestation commit if err != nil from here onwards.

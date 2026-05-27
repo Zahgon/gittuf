@@ -4,12 +4,8 @@
 package cache
 
 import (
-	"encoding/json"
 	"errors"
-	"log/slog"
 
-	"github.com/gittuf/gittuf/internal/attestations"
-	"github.com/gittuf/gittuf/internal/rsl"
 	"github.com/gittuf/gittuf/pkg/gitinterface"
 )
 
@@ -49,155 +45,40 @@ type Persistent struct {
 }
 
 func (p *Persistent) Commit(repo *gitinterface.Repository) error {
-	if len(p.PolicyEntries) == 0 && len(p.AttestationEntries) == 0 && p.AddedAttestationsBeforeNumber == 0 && len(p.LastVerifiedEntryForRef) == 0 {
-		// nothing to do
-		return nil
-	}
-
-	contents, err := json.Marshal(p)
-	if err != nil {
-		return err
-	}
-
-	blobID, err := repo.WriteBlob(contents)
-	if err != nil {
-		return err
-	}
-
-	treeBuilder := gitinterface.NewTreeBuilder(repo)
-	treeID, err := treeBuilder.WriteTreeFromEntries([]gitinterface.TreeEntry{gitinterface.NewEntryBlob(persistentTreeEntryName, blobID)})
-	if err != nil {
-		return err
-	}
-
-	currentCommitID, _ := repo.GetReference(Ref) //nolint:errcheck
-	if !currentCommitID.IsZero() {
-		currentTreeID, err := repo.GetCommitTreeID(currentCommitID)
-		if err == nil && treeID.Equal(currentTreeID) {
-			// no change in cache contents, noop
-			return nil
-		}
-	}
-
-	_, err = repo.Commit(treeID, Ref, "Set persistent cache\n", false)
-	return err
+	_ = "STUB: not implemented"
+	return nil
 }
+
+// nothing to do
+
+//nolint:errcheck
+
+// no change in cache contents, noop
 
 // PopulatePersistentCache scans the repository's RSL and generates a persistent
 // local-only cache of policy and attestation entries. This makes subsequent
 // verifications faster.
 func PopulatePersistentCache(repo *gitinterface.Repository) error {
-	persistent := &Persistent{
-		PolicyEntries:      []RSLEntryIndex{},
-		AttestationEntries: []RSLEntryIndex{},
-	}
-
-	iterator, err := rsl.GetLatestEntry(repo)
-	if err != nil {
-		return err
-	}
-
-	if iterator.GetNumber() == 0 {
-		return ErrEntryNotNumbered
-	}
-
-	persistent.AddedAttestationsBeforeNumber = iterator.GetNumber()
-
-	for {
-		if iterator, isReferenceEntry := iterator.(*rsl.ReferenceEntry); isReferenceEntry {
-			switch iterator.RefName {
-			case policyRef:
-				persistent.InsertPolicyEntryNumber(iterator.GetNumber(), iterator.GetID())
-			case attestations.Ref:
-				persistent.InsertAttestationEntryNumber(iterator.GetNumber(), iterator.GetID())
-			}
-		}
-
-		iterator, err = rsl.GetParentForEntry(repo, iterator)
-		if err != nil {
-			if errors.Is(err, rsl.ErrRSLEntryNotFound) {
-				break
-			}
-
-			return err
-		}
-
-		if iterator.GetNumber() == 0 {
-			return ErrEntryNotNumbered
-		}
-	}
-
-	return persistent.Commit(repo)
+	_ = "STUB: not implemented"
+	return nil
 }
 
 // LoadPersistentCache loads the persistent cache from the tip of the local ref.
 // If an instance has already been loaded and a pointer has been stored in
 // memory, that instance is returned.
 func LoadPersistentCache(repo *gitinterface.Repository) (*Persistent, error) {
-	slog.Debug("Loading persistent cache from disk...")
-
-	commitID, err := repo.GetReference(Ref)
-	if err != nil {
-		if errors.Is(err, gitinterface.ErrReferenceNotFound) {
-			// Persistent cache doesn't exist
-			slog.Debug("Persistent cache does not exist")
-			return nil, ErrNoPersistentCache
-		}
-
-		return nil, err
-	}
-
-	treeID, err := repo.GetCommitTreeID(commitID)
-	if err != nil {
-		return nil, err
-	}
-
-	allFiles, err := repo.GetAllFilesInTree(treeID)
-	if err != nil {
-		return nil, err
-	}
-
-	blobID, has := allFiles[persistentTreeEntryName]
-	if !has {
-		// Persistent cache doesn't seem to exist? This maybe warrants
-		// an error but we may have more than one file here in future?
-		slog.Debug("Persistent cache does not exist")
-		return nil, ErrNoPersistentCache
-	}
-
-	blob, err := repo.ReadBlob(blobID)
-	if err != nil {
-		return nil, err
-	}
-
-	persistentCache := &Persistent{}
-	if err := json.Unmarshal(blob, &persistentCache); err != nil {
-		return nil, err
-	}
-
-	slog.Debug("Loaded persistent cache")
-	return persistentCache, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
+
+// Persistent cache doesn't exist
+
+// Persistent cache doesn't seem to exist? This maybe warrants
+// an error but we may have more than one file here in future?
 
 // DeletePersistentCache deletes the local persistent cache ref.
 func DeletePersistentCache(repo *gitinterface.Repository) error {
-	ref, err := repo.GetReference(Ref)
-	if err != nil {
-		if errors.Is(err, gitinterface.ErrReferenceNotFound) {
-			return ErrNoPersistentCache
-		}
-		return err
-	}
-
-	if ref.IsZero() {
-		return ErrNoPersistentCache
-	}
-
-	err = repo.DeleteReference(Ref)
-	if err != nil {
-		return err
-	}
-
+	_ = "STUB: not implemented"
 	return nil
 }
 
@@ -209,26 +90,18 @@ type RSLEntryIndex struct {
 }
 
 func (r *RSLEntryIndex) GetEntryID() gitinterface.Hash {
-	hash, _ := gitinterface.NewHash(r.EntryID)
-	// TODO: error?
-	return hash
+	_ = "STUB: not implemented"
+	return *new(gitinterface.Hash)
 }
 
-func (r *RSLEntryIndex) GetEntryNumber() uint64 {
-	return r.EntryNumber
-}
+// TODO: error?
 
-func binarySearch(a, b RSLEntryIndex) int {
-	if a.GetEntryNumber() == b.GetEntryNumber() {
-		// Exact match
-		return 0
-	}
+func (r *RSLEntryIndex) GetEntryNumber() uint64 { _ = "STUB: not implemented"; return 0 }
 
-	if a.GetEntryNumber() < b.GetEntryNumber() {
-		// Precedes
-		return -1
-	}
+func binarySearch(a, b RSLEntryIndex) int { _ = "STUB: not implemented"; return 0 }
 
-	// Succeeds
-	return 1
-}
+// Exact match
+
+// Precedes
+
+// Succeeds

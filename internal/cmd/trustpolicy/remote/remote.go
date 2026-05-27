@@ -4,21 +4,7 @@
 package remote
 
 import (
-	"github.com/gittuf/gittuf/internal/cmd/trustpolicy/remote/pull"
-	"github.com/gittuf/gittuf/internal/cmd/trustpolicy/remote/push"
 	"github.com/spf13/cobra"
 )
 
-func New() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:               "remote",
-		Short:             "Tools for managing remote policies",
-		Long:              "The 'remote' subcommand provides tools for managing gittuf interactions with remote repositories.",
-		DisableAutoGenTag: true,
-	}
-
-	cmd.AddCommand(pull.New())
-	cmd.AddCommand(push.New())
-
-	return cmd
-}
+func New() *cobra.Command { _ = "STUB: not implemented"; return nil }

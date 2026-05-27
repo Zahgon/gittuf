@@ -9,8 +9,4 @@ type Options struct {
 
 type Option func(o *Options)
 
-func WithBypassRSLForFeatureRef() Option {
-	return func(o *Options) {
-		o.BypassRSLForFeatureRef = true
-	}
-}
+func WithBypassRSLForFeatureRef() Option { _ = "STUB: not implemented"; return *new(Option) }

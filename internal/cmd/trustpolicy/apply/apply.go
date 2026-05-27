@@ -4,7 +4,6 @@
 package apply
 
 import (
-	"github.com/gittuf/gittuf/experimental/gittuf"
 	"github.com/spf13/cobra"
 )
 
@@ -12,38 +11,11 @@ type options struct {
 	localOnly bool
 }
 
-func (o *options) AddFlags(cmd *cobra.Command) {
-	cmd.Flags().BoolVar(
-		&o.localOnly,
-		"local-only",
-		false,
-		"indicate that the policy must be committed into the RSL locally",
-	)
-}
+func (o *options) AddFlags(cmd *cobra.Command) { _ = "STUB: not implemented"; return }
 
 func (o *options) Run(cmd *cobra.Command, args []string) error {
-	repo, err := gittuf.LoadRepository(".")
-	if err != nil {
-		return err
-	}
-
-	remoteName := ""
-	if len(args) > 0 {
-		remoteName = args[0]
-	}
-
-	return repo.ApplyPolicy(cmd.Context(), remoteName, o.localOnly, true)
+	_ = "STUB: not implemented"
+	return nil
 }
 
-func New() *cobra.Command {
-	o := &options{}
-	cmd := &cobra.Command{
-		Use:   "apply",
-		Short: "Validate and apply changes from policy-staging to policy",
-		Long:  "The 'apply' command validates and applies changes from the policy-staging area to the repository's policy. It is used to make staged policy updates effective and can optionally commit the policy change into the RSL locally.",
-		RunE:  o.Run,
-	}
-	o.AddFlags(cmd)
-
-	return cmd
-}
+func New() *cobra.Command { _ = "STUB: not implemented"; return nil }

@@ -4,8 +4,6 @@
 package removepropagationdirective
 
 import (
-	"github.com/gittuf/gittuf/experimental/gittuf"
-	trustpolicyopts "github.com/gittuf/gittuf/experimental/gittuf/options/trustpolicy"
 	"github.com/gittuf/gittuf/internal/cmd/trust/persistent"
 	"github.com/spf13/cobra"
 )
@@ -15,44 +13,10 @@ type options struct {
 	name string
 }
 
-func (o *options) AddFlags(cmd *cobra.Command) {
-	cmd.Flags().StringVar(
-		&o.name,
-		"name",
-		"",
-		"name of propagation directive",
-	)
-	cmd.MarkFlagRequired("name") //nolint:errcheck
-}
+func (o *options) AddFlags(cmd *cobra.Command) { _ = "STUB: not implemented"; return }
 
-func (o *options) Run(cmd *cobra.Command, _ []string) error {
-	repo, err := gittuf.LoadRepository(".")
-	if err != nil {
-		return err
-	}
+//nolint:errcheck
 
-	signer, err := gittuf.LoadSigner(repo, o.p.SigningKey)
-	if err != nil {
-		return err
-	}
+func (o *options) Run(cmd *cobra.Command, _ []string) error { _ = "STUB: not implemented"; return nil }
 
-	opts := []trustpolicyopts.Option{}
-	if o.p.WithRSLEntry {
-		opts = append(opts, trustpolicyopts.WithRSLEntry())
-	}
-	return repo.RemovePropagationDirective(cmd.Context(), signer, o.name, true, opts...)
-}
-
-func New(persistent *persistent.Options) *cobra.Command {
-	o := &options{p: persistent}
-	cmd := &cobra.Command{
-		Use:               "remove-propagation-directive",
-		Short:             `Remove propagation directive from gittuf root of trust`,
-		Long:              "The 'remove-propagation-directive' command removes a propagation directive from the repository's root of trust. It is used to delete an existing directive and stop the propagation of content between repositories.",
-		RunE:              o.Run,
-		DisableAutoGenTag: true,
-	}
-	o.AddFlags(cmd)
-
-	return cmd
-}
+func New(persistent *persistent.Options) *cobra.Command { _ = "STUB: not implemented"; return nil }

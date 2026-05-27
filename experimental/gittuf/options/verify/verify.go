@@ -11,13 +11,8 @@ type Options struct {
 type Option func(o *Options)
 
 func WithOverrideRefName(refNameOverride string) Option {
-	return func(o *Options) {
-		o.RefNameOverride = refNameOverride
-	}
+	_ = "STUB: not implemented"
+	return *new(Option)
 }
 
-func WithLatestOnly() Option {
-	return func(o *Options) {
-		o.LatestOnly = true
-	}
-}
+func WithLatestOnly() Option { _ = "STUB: not implemented"; return *new(Option) }

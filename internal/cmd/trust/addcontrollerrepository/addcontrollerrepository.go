@@ -4,10 +4,7 @@
 package addcontrollerrepository
 
 import (
-	"github.com/gittuf/gittuf/experimental/gittuf"
-	trustpolicyopts "github.com/gittuf/gittuf/experimental/gittuf/options/trustpolicy"
 	"github.com/gittuf/gittuf/internal/cmd/trust/persistent"
-	"github.com/gittuf/gittuf/internal/tuf"
 	"github.com/spf13/cobra"
 )
 
@@ -18,70 +15,14 @@ type options struct {
 	initialRootPrincipals []string
 }
 
-func (o *options) AddFlags(cmd *cobra.Command) {
-	cmd.Flags().StringVar(
-		&o.repositoryName,
-		"name",
-		"",
-		"name of controller repository",
-	)
-	cmd.MarkFlagRequired("name") //nolint:errcheck
+func (o *options) AddFlags(cmd *cobra.Command) { _ = "STUB: not implemented"; return }
 
-	cmd.Flags().StringVar(
-		&o.repositoryLocation,
-		"location",
-		"",
-		"location of controller repository",
-	)
-	cmd.MarkFlagRequired("location") //nolint:errcheck
+//nolint:errcheck
 
-	cmd.Flags().StringArrayVar(
-		&o.initialRootPrincipals,
-		"initial-root-principal",
-		[]string{},
-		"initial root principals of controller repository",
-	)
-	cmd.MarkFlagRequired("initial-root-principal") //nolint:errcheck
-}
+//nolint:errcheck
 
-func (o *options) Run(cmd *cobra.Command, _ []string) error {
-	repo, err := gittuf.LoadRepository(".")
-	if err != nil {
-		return err
-	}
+//nolint:errcheck
 
-	signer, err := gittuf.LoadSigner(repo, o.p.SigningKey)
-	if err != nil {
-		return err
-	}
+func (o *options) Run(cmd *cobra.Command, _ []string) error { _ = "STUB: not implemented"; return nil }
 
-	initialRootPrincipals := []tuf.Principal{}
-	for _, principalRef := range o.initialRootPrincipals {
-		principal, err := gittuf.LoadPublicKey(principalRef)
-		if err != nil {
-			return err
-		}
-		initialRootPrincipals = append(initialRootPrincipals, principal)
-	}
-
-	opts := []trustpolicyopts.Option{}
-	if o.p.WithRSLEntry {
-		opts = append(opts, trustpolicyopts.WithRSLEntry())
-	}
-
-	return repo.AddControllerRepository(cmd.Context(), signer, o.repositoryName, o.repositoryLocation, initialRootPrincipals, true, opts...)
-}
-
-func New(persistent *persistent.Options) *cobra.Command {
-	o := &options{p: persistent}
-	cmd := &cobra.Command{
-		Use:               "add-controller-repository",
-		Short:             `Add a controller repository`,
-		Long:              "The 'add-controller-repository' command registers a controller repository in the repository's root of trust. It is used to add and configure a controller repository, including its name, location, and initial root principals.",
-		RunE:              o.Run,
-		DisableAutoGenTag: true,
-	}
-	o.AddFlags(cmd)
-
-	return cmd
-}
+func New(persistent *persistent.Options) *cobra.Command { _ = "STUB: not implemented"; return nil }

@@ -8,12 +8,6 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"os/exec"
-	"path/filepath"
-	"strings"
-
-	"github.com/gittuf/gittuf/experimental/gittuf"
-	"github.com/gittuf/gittuf/pkg/gitinterface"
 )
 
 /*
@@ -101,117 +95,50 @@ const (
 	gittufRefPrefix = "refs/gittuf/"
 )
 
-func run(ctx context.Context) error {
-	if len(os.Args) < 3 {
-		return fmt.Errorf("usage: %s <remote-name> <url>", os.Args[0])
-	}
+func run(ctx context.Context) error { _ = "STUB: not implemented"; return nil }
 
-	remoteName := os.Args[1]
-	url := os.Args[2]
+// When cloning/fetching, we have to hang until Git sets things up
+// before we can update-ref
 
-	var handler func(context.Context, *gittuf.Repository, string, string) (map[string]string, bool, error)
-	switch {
-	case strings.HasPrefix(url, "https://"), strings.HasPrefix(url, "http://"), strings.HasPrefix(url, "ftp://"), strings.HasPrefix(url, "ftps://"):
-		log("Prefix indicates curl remote helper must be used")
-		handler = handleCurl
-	case strings.HasPrefix(url, "/"), strings.HasPrefix(url, "file://"):
-		log("Prefix indicates file helper must be used")
-		return nil
-	default:
-		log("Using ssh helper")
-		handler = handleSSH
-	}
+// `entries` is sorted by name. The "regular" entries have pack- as a
+// prefix. When actually fetching contents, it's stored in a tmp_pack or
+// temp_rev file. Therefore, if the last entry starts with pack-, we
+// know we don't have a tmp_ file.
 
-	repo, err := gittuf.LoadRepository(".")
-	if err != nil {
-		log("Unable to load repository")
-		return err
-	}
-	gitDir := repo.GetGitRepository().GetGitDir()
+// not tmp_pack or tmp_rev
 
-	gittufRefsTips, isPush, err := handler(ctx, repo, remoteName, url)
-	if err != nil {
-		return err
-	}
+// TODO: this breaks when `git fetch` is invoked explicitly for a gittuf
+// ref because Git separately tries to update-ref.
+// During wants, check if the latest remote gittuf ref tips are
+// requested. Use _only_ the latest so as to avoid any unnecessary blob
+// collisions.
 
-	for {
-		// When cloning/fetching, we have to hang until Git sets things up
-		// before we can update-ref
-		entries, err := os.ReadDir(filepath.Join(gitDir, "objects", "pack"))
-		if err != nil {
-			return err
-		}
+//nolint:errcheck
 
-		if len(entries) == 0 {
-			break
-		}
+// Uncomment after gittuf can accept a git_dir env var; this will happen
+// with the gitinterface PRs naturally.
 
-		// `entries` is sorted by name. The "regular" entries have pack- as a
-		// prefix. When actually fetching contents, it's stored in a tmp_pack or
-		// temp_rev file. Therefore, if the last entry starts with pack-, we
-		// know we don't have a tmp_ file.
+// TODO: this must either be looped to address each changed ref that
+// exists locally or gittuf needs another flag for --all.
+// var cmd *exec.Cmd
+// if rslTip != "" {
+// 	log("we have rsl tip")
+// 	cmd = exec.Command("gittuf", "verify-ref", "--from-entry", rslTip, "HEAD")
+// } else {
+// 	cwd, _ := os.Getwd()
+// 	log("we don't have rsl tip", cwd)
+// 	cmd = exec.Command("gittuf", "verify-ref", "HEAD")
+// }
+// _, err := cmd.Output()
+// if err != nil {
+// 	log(err.Error())
+// 	if _, nerr := os.Stderr.Write([]byte("gittuf verification failed\n")); nerr != nil {
+// 		return errors.Join(err, nerr)
+// 	}
+// 	return err
+// }
 
-		lastEntryName := entries[len(entries)-1].Name()
-		if strings.HasPrefix(lastEntryName, "pack-") { // not tmp_pack or tmp_rev
-			break
-		}
-	}
-
-	if !isPush {
-		// TODO: this breaks when `git fetch` is invoked explicitly for a gittuf
-		// ref because Git separately tries to update-ref.
-		// During wants, check if the latest remote gittuf ref tips are
-		// requested. Use _only_ the latest so as to avoid any unnecessary blob
-		// collisions.
-		for ref, tip := range gittufRefsTips {
-			tipH, err := gitinterface.NewHash(tip)
-			if err != nil {
-				return err
-			}
-			if err := repo.GetGitRepository().SetReference(ref, tipH); err != nil {
-				msg := fmt.Sprintf("Unable to set reference '%s': '%s'", ref, err.Error())
-				log(msg)
-				fmt.Fprintf(os.Stderr, "git-remote-gittuf: %s\n", msg) //nolint:errcheck
-			}
-		}
-
-		// Uncomment after gittuf can accept a git_dir env var; this will happen
-		// with the gitinterface PRs naturally.
-
-		// TODO: this must either be looped to address each changed ref that
-		// exists locally or gittuf needs another flag for --all.
-		// var cmd *exec.Cmd
-		// if rslTip != "" {
-		// 	log("we have rsl tip")
-		// 	cmd = exec.Command("gittuf", "verify-ref", "--from-entry", rslTip, "HEAD")
-		// } else {
-		// 	cwd, _ := os.Getwd()
-		// 	log("we don't have rsl tip", cwd)
-		// 	cmd = exec.Command("gittuf", "verify-ref", "HEAD")
-		// }
-		// _, err := cmd.Output()
-		// if err != nil {
-		// 	log(err.Error())
-		// 	if _, nerr := os.Stderr.Write([]byte("gittuf verification failed\n")); nerr != nil {
-		// 		return errors.Join(err, nerr)
-		// 	}
-		// 	return err
-		// }
-	}
-
-	return nil
-}
-
-func populateGitVersion() error {
-	cmd := exec.Command("git", "--version")
-	output, err := cmd.Output()
-	if err != nil {
-		return err
-	}
-
-	gitVersion = strings.TrimPrefix(strings.TrimSpace(string(output)), "git version ")
-	return nil
-}
+func populateGitVersion() error { _ = "STUB: not implemented"; return nil }
 
 func main() {
 	logFilePath := os.Getenv("GITTUF_LOG_FILE")

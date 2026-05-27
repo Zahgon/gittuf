@@ -4,10 +4,7 @@
 package init
 
 import (
-	"github.com/gittuf/gittuf/experimental/gittuf"
-	trustpolicyopts "github.com/gittuf/gittuf/experimental/gittuf/options/trustpolicy"
 	"github.com/gittuf/gittuf/internal/cmd/policy/persistent"
-	"github.com/gittuf/gittuf/internal/policy"
 	"github.com/spf13/cobra"
 )
 
@@ -16,43 +13,8 @@ type options struct {
 	policyName string
 }
 
-func (o *options) AddFlags(cmd *cobra.Command) {
-	cmd.Flags().StringVar(
-		&o.policyName,
-		"policy-name",
-		policy.TargetsRoleName,
-		"name of policy file to create",
-	)
-}
+func (o *options) AddFlags(cmd *cobra.Command) { _ = "STUB: not implemented"; return }
 
-func (o *options) Run(cmd *cobra.Command, _ []string) error {
-	repo, err := gittuf.LoadRepository(".")
-	if err != nil {
-		return err
-	}
+func (o *options) Run(cmd *cobra.Command, _ []string) error { _ = "STUB: not implemented"; return nil }
 
-	signer, err := gittuf.LoadSigner(repo, o.p.SigningKey)
-	if err != nil {
-		return err
-	}
-
-	opts := []trustpolicyopts.Option{}
-	if o.p.WithRSLEntry {
-		opts = append(opts, trustpolicyopts.WithRSLEntry())
-	}
-	return repo.InitializeTargets(cmd.Context(), signer, o.policyName, true, opts...)
-}
-
-func New(persistent *persistent.Options) *cobra.Command {
-	o := &options{p: persistent}
-	cmd := &cobra.Command{
-		Use:               "init",
-		Short:             "Initialize policy file",
-		Long:              "This command initializes a new gittuf policy file with the specified policy name. The user must provide a valid signing key.",
-		RunE:              o.Run,
-		DisableAutoGenTag: true,
-	}
-	o.AddFlags(cmd)
-
-	return cmd
-}
+func New(persistent *persistent.Options) *cobra.Command { _ = "STUB: not implemented"; return nil }

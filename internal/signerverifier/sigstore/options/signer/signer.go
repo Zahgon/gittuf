@@ -27,32 +27,12 @@ var DefaultOptions = &Options{
 
 type Option func(o *Options)
 
-func WithIssuerURL(issuerURL string) Option {
-	return func(o *Options) {
-		o.IssuerURL = issuerURL
-	}
-}
+func WithIssuerURL(issuerURL string) Option { _ = "STUB: not implemented"; return *new(Option) }
 
-func WithClientID(clientID string) Option {
-	return func(o *Options) {
-		o.ClientID = clientID
-	}
-}
+func WithClientID(clientID string) Option { _ = "STUB: not implemented"; return *new(Option) }
 
-func WithRedirectURL(redirectURL string) Option {
-	return func(o *Options) {
-		o.RedirectURL = redirectURL
-	}
-}
+func WithRedirectURL(redirectURL string) Option { _ = "STUB: not implemented"; return *new(Option) }
 
-func WithFulcioURL(fulcioURL string) Option {
-	return func(o *Options) {
-		o.FulcioURL = fulcioURL
-	}
-}
+func WithFulcioURL(fulcioURL string) Option { _ = "STUB: not implemented"; return *new(Option) }
 
-func WithRekorURL(rekorURL string) Option {
-	return func(o *Options) {
-		o.RekorURL = rekorURL
-	}
-}
+func WithRekorURL(rekorURL string) Option { _ = "STUB: not implemented"; return *new(Option) }

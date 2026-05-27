@@ -4,43 +4,20 @@
 package display
 
 import (
-	"fmt"
 	"io"
-	"log/slog"
-	"os"
 	"os/exec"
-	"strings"
 )
 
 func NewDisplayWriter(output io.Writer) io.WriteCloser {
-	slog.Debug("Finding pager program...")
-	pagerProg := getPager()
-	if pagerProg != nil {
-		binary := pagerProg.getBinary()
-		slog.Debug(fmt.Sprintf("Found pager program %s", binary))
-
-		flags := pagerProg.getFlags()
-		cmd := exec.Command(binary, flags...)
-		cmd.Stdout = output
-		cmd.Stderr = os.Stderr
-		return &pagerWriteCloser{command: cmd}
-	}
-
-	slog.Debug("Pager program not found, writing to output directly...")
-	switch output := output.(type) {
-	// adityasaky: os.Stdout is an io.WriteCloser and we hardcode that as our
-	// output medium. So, do we even need this check and noopwritecloser?
-	// Possibly not, but I suggest we keep it until we can sufficiently evaluate
-	// across multiple environments. noopwritecloser is handy for test writers
-	// as well, so.
-	case io.WriteCloser:
-		return output
-	default:
-		return &noopwritecloser{
-			writer: output,
-		}
-	}
+	_ = "STUB: not implemented"
+	return *new(io.WriteCloser)
 }
+
+// adityasaky: os.Stdout is an io.WriteCloser and we hardcode that as our
+// output medium. So, do we even need this check and noopwritecloser?
+// Possibly not, but I suggest we keep it until we can sufficiently evaluate
+// across multiple environments. noopwritecloser is handy for test writers
+// as well, so.
 
 // pagerGetter is a pointer to the dispatcher that selects the pager program to
 // use. We use this to override the "real" pagerGetter in tests.
@@ -48,21 +25,11 @@ type pagerGetter = func() pager
 
 var getPager pagerGetter = getPagerReal //nolint:revive
 
-func getPagerReal() pager {
-	var pagerPrograms = []pager{
-		newPagerEnvVar(), // look at what the user has configured
-		newPagerLess(),   // default on unix-like systems
-		newPagerMore(),   // default on Windows
-	}
+func getPagerReal() pager { _ = "STUB: not implemented"; return *new(pager) }
 
-	for _, prog := range pagerPrograms {
-		if _, err := exec.LookPath(prog.getBinary()); err == nil {
-			return prog
-		}
-	}
-
-	return nil
-}
+// look at what the user has configured
+// default on unix-like systems
+// default on Windows
 
 // pager implements a generic interface for a stdout pager like less or more. We
 // use this interface because some environments need coloring information to be
@@ -79,76 +46,52 @@ type pagerEnvVar struct {
 	flags  []string
 }
 
-func newPagerEnvVar() *pagerEnvVar {
-	env := os.Getenv("PAGER") // look at what the user has configured
-	env = strings.TrimSpace(env)
+func newPagerEnvVar() *pagerEnvVar { _ = "STUB: not implemented"; return nil }
 
-	if env == "" {
-		return &pagerEnvVar{}
-	}
+// look at what the user has configured
 
-	split := strings.Split(env, " ")
-	return &pagerEnvVar{
-		binary: split[0],
-		flags:  split[1:],
-	}
-}
-
-func (p *pagerEnvVar) getBinary() string {
-	return p.binary
-}
+func (p *pagerEnvVar) getBinary() string { _ = "STUB: not implemented"; return "" }
 
 func (p *pagerEnvVar) getFlags() []string {
-	return p.flags
+	_ = "STUB: not implemented"
+
+	// pagerLess implements the pager interface for `less`.
+	return nil
 }
 
-// pagerLess implements the pager interface for `less`.
 type pagerLess struct{}
 
-func newPagerLess() *pagerLess {
-	return &pagerLess{}
-}
+func newPagerLess() *pagerLess { _ = "STUB: not implemented"; return nil }
 
-func (p *pagerLess) getBinary() string {
-	return "less"
-}
+func (p *pagerLess) getBinary() string { _ = "STUB: not implemented"; return "" }
 
-func (p *pagerLess) getFlags() []string {
-	options := os.Getenv("LESS") // see if user already has preferred LESS flags
-	if options != "" {
-		flags := make([]string, 0, len(options))
-		split := strings.Split(options, "")
-		for _, s := range split {
-			flags = append(flags, fmt.Sprintf("-%s", s)) // we prefix the "-" as this is passed to exec.Command
-		}
-		return flags
-	}
+func (p *pagerLess) getFlags() []string { _ = "STUB: not implemented"; return nil }
 
-	// These are the default flags to use with less, matches what Git sets
-	return []string{
-		"-F", // --quit-if-one-screen
-		"-R", // --RAW-CONTROL-CHARS for coloring
-		"-X", // --no-init
-	}
-}
+// see if user already has preferred LESS flags
+
+// we prefix the "-" as this is passed to exec.Command
+
+// These are the default flags to use with less, matches what Git sets
+
+// --quit-if-one-screen
+// --RAW-CONTROL-CHARS for coloring
+// --no-init
 
 // pagerMore implements the pager interface for `more`.
 type pagerMore struct{}
 
-func newPagerMore() *pagerMore {
-	return &pagerMore{}
-}
+func newPagerMore() *pagerMore { _ = "STUB: not implemented"; return nil }
 
-func (p *pagerMore) getBinary() string {
-	return "more"
-}
+func (p *pagerMore) getBinary() string { _ = "STUB: not implemented"; return "" }
 
 func (p *pagerMore) getFlags() []string {
+	_ = "STUB: not implemented"
+
+	// pagerWriteCloser implements the io.WriteCloser while supporting writing
+	// buffered contents displayed using a pager program like less or more.
 	return nil
 }
 
-// pagerWriteCloser implements the io.WriteCloser while supporting writing
-// buffered contents displayed using a pager program like less or more.
 type pagerWriteCloser struct {
 	command     *exec.Cmd
 	stdInWriter io.WriteCloser
@@ -156,39 +99,18 @@ type pagerWriteCloser struct {
 }
 
 func (p *pagerWriteCloser) Write(contents []byte) (int, error) {
-	if !p.started {
-		// Load the page program's stdin pipe so we can feed it content to
-		// display
-		stdInWriter, err := p.command.StdinPipe()
-		if err != nil {
-			return -1, err
-		}
-		p.stdInWriter = stdInWriter
+	_ = "STUB: not implemented"
 
-		// Start the page cmd
-		if err := p.command.Start(); err != nil {
-			return -1, err
-		}
-
-		p.started = true
-	}
-
-	return p.stdInWriter.Write(contents)
+	// Load the page program's stdin pipe so we can feed it content to
+	// display
+	return 0, nil
 }
 
-func (p *pagerWriteCloser) Close() error {
-	// Close the stdin pipe first as the cmd will wait indefinitely otherwise
-	if p.stdInWriter != nil {
-		if err := p.stdInWriter.Close(); err != nil {
-			return err
-		}
-	}
+// Start the page cmd
 
-	if p.started {
-		if err := p.command.Wait(); err != nil {
-			return err
-		}
-	}
+func (p *pagerWriteCloser) Close() error {
+	_ = "STUB: not implemented"
+	// Close the stdin pipe first as the cmd will wait indefinitely otherwise
 	return nil
 }
 
@@ -199,9 +121,8 @@ type noopwritecloser struct {
 }
 
 func (n *noopwritecloser) Write(contents []byte) (int, error) {
-	return n.writer.Write(contents)
+	_ = "STUB: not implemented"
+	return 0, nil
 }
 
-func (n *noopwritecloser) Close() error {
-	return nil
-}
+func (n *noopwritecloser) Close() error { _ = "STUB: not implemented"; return nil }

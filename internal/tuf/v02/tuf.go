@@ -8,8 +8,6 @@ package v02
 // however, is inspired by or cloned from the go-tuf implementation.
 
 import (
-	"fmt"
-
 	"github.com/gittuf/gittuf/internal/common/set"
 	v01 "github.com/gittuf/gittuf/internal/tuf/v01"
 	"github.com/secure-systems-lab/go-securesystemslib/signerverifier"
@@ -25,10 +23,7 @@ const (
 type Key = v01.Key
 
 // NewKeyFromSSLibKey converts the signerverifier.SSLibKey into a Key object.
-func NewKeyFromSSLibKey(key *signerverifier.SSLibKey) *Key {
-	k := Key(*key)
-	return &k
-}
+func NewKeyFromSSLibKey(key *signerverifier.SSLibKey) *Key { _ = "STUB: not implemented"; return nil }
 
 type Person struct {
 	PersonID             string            `json:"personID"`
@@ -37,39 +32,11 @@ type Person struct {
 	Custom               map[string]string `json:"custom"`
 }
 
-func (p *Person) ID() string {
-	return p.PersonID
-}
+func (p *Person) ID() string { _ = "STUB: not implemented"; return "" }
 
-func (p *Person) Keys() []*signerverifier.SSLibKey {
-	keys := make([]*signerverifier.SSLibKey, 0, len(p.PublicKeys))
-	for _, key := range p.PublicKeys {
-		key := signerverifier.SSLibKey(*key)
-		keys = append(keys, &key)
-	}
+func (p *Person) Keys() []*signerverifier.SSLibKey { _ = "STUB: not implemented"; return nil }
 
-	return keys
-}
-
-func (p *Person) CustomMetadata() map[string]string {
-	var metadata map[string]string
-
-	for provider, identity := range p.AssociatedIdentities {
-		if metadata == nil {
-			metadata = map[string]string{}
-		}
-		metadata[fmt.Sprintf("%s %s", associatedIdentityKey, provider)] = identity
-	}
-
-	for key, value := range p.Custom {
-		if metadata == nil {
-			metadata = map[string]string{}
-		}
-		metadata[key] = value
-	}
-
-	return metadata
-}
+func (p *Person) CustomMetadata() map[string]string { _ = "STUB: not implemented"; return nil }
 
 // Role records common characteristics recorded in a role entry in Root metadata
 // and in a delegation entry.

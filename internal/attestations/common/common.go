@@ -4,21 +4,10 @@
 package common //nolint:revive
 
 import (
-	"encoding/json"
-
 	"google.golang.org/protobuf/types/known/structpb"
 )
 
 func PredicateToPBStruct(predicate any) (*structpb.Struct, error) {
-	predicateBytes, err := json.Marshal(predicate)
-	if err != nil {
-		return nil, err
-	}
-
-	predicateInterface := &map[string]any{}
-	if err := json.Unmarshal(predicateBytes, predicateInterface); err != nil {
-		return nil, err
-	}
-
-	return structpb.NewStruct(*predicateInterface)
+	_ = "STUB: not implemented"
+	return nil, nil
 }
